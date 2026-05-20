@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List Life Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>📋 To-Do List Life Dashboard</h1>
+
+    <!-- GREETING & TIME -->
+    <div class="greeting-section">
+      <div id="greeting"></div>
+      <div id="datetime"></div>
+    </div>
+
+    <!-- FOCUS TIMER -->
+    <div class="timer-section">
+      <h2>⏱️ Focus Timer</h2>
+      <div class="timer-display" id="timerDisplay">25:00</div>
+      <div class="timer-buttons">
+        <button id="startTimer">▶ Start</button>
+        <button id="stopTimer">⏸ Stop</button>
+        <button id="resetTimer">🔄 Reset</button>
+      </div>
+    </div>
+
+    <!-- TO-DO LIST -->
+    <div class="todo-section">
+      <h2>✅ To-Do List</h2>
+      <div class="todo-input">
+        <input type="text" id="taskInput" placeholder="Tulis tugas baru...">
+        <button id="addTaskBtn">➕ Tambah</button>
+      </div>
+      <ul id="taskList"></ul>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="links-section">
+      <h2>🔗 Quick Links</h2>
+      <div class="link-input">
+        <input type="text" id="linkName" placeholder="Nama situs (contoh: Google)">
+        <input type="text" id="linkUrl" placeholder="URL (contoh: https://google.com)">
+        <button id="addLinkBtn">➕ Tambah Link</button>
+      </div>
+      <div id="linksContainer" class="links-container"></div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

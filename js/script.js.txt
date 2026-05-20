@@ -1,0 +1,210 @@
+// ========== GREETING & TIME ==========
+function updateGreetingAndTime() {
+  const now = new Date();
+  const hours = now.getHours();
+  let greeting = '';
+  
+  if (hours < 12) greeting = '🌅 Selamat Pagi';
+  else if (hours < 18) greeting = '☀️ Selamat Siang';
+  else greeting = '🌙 Selamat Malam';
+  
+  document.getElementById('greeting').innerHTML = `${greeting}, User!`;
+  
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const dateString = now.toLocaleDateString('id-ID', options);
+  const timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('datetime').innerHTML = `${dateString} | ${timeString}`;
+}
+
+setInterval(updateGreetingAndTime, 1000);
+updateGreetingAndTime();
+
+// ========== FOCUS TIMER ==========
+let timeLeft = 25 * 60; // 25 menit dalam detik
+let timerId = null;
+const timerDisplay = document.getElementById('timerDisplay');
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function startTimer() {
+  if (timerId !== null) return;
+  timerId = setInterval(() => {
+    if (timeLeft > 0) {
+      timeLeft--;
+      updateTimerDisplay();
+    } else {
+      stopTimer();
+      alert('⏰ Waktu fokus selesai! Selamat beristirahat.');
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (timerId !== null) {
+    clearInterval(timerId);
+    timerId = null;
+  }
+}
+
+function resetTimer() {
+  stopTimer();
+  timeLeft = 25 * 60;
+  updateTimerDisplay();
+}
+
+document.getElementById('startTimer').addEventListener('click', startTimer);
+document.getElementById('stopTimer').addEventListener('click', stopTimer);
+document.getElementById('resetTimer').addEventListener('click', resetTimer);
+
+// ========== TO-DO LIST dengan Local Storage ==========
+let tasks = [];
+
+function loadTasks() {
+  const stored = localStorage.getItem('todoTasks');
+  if (stored) {
+    tasks = JSON.parse(stored);
+  }
+  renderTasks();
+}
+
+function saveTasks() {
+  localStorage.setItem('todoTasks', JSON.stringify(tasks));
+}
+
+function renderTasks() {
+  const taskList = document.getElementById('taskList');
+  taskList.innerHTML = '';
+  
+  tasks.forEach((task, index) => {
+    const li = document.createElement('li');
+    
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = task.completed;
+    checkbox.addEventListener('change', () => {
+      task.completed = checkbox.checked;
+      saveTasks();
+      renderTasks();
+    });
+    
+    const span = document.createElement('span');
+    span.textContent = task.text;
+    if (task.completed) span.classList.add('completed');
+    
+    const editBtn = document.createElement('button');
+    editBtn.textContent = '✏️ Edit';
+    editBtn.addEventListener('click', () => {
+      const newText = prompt('Edit tugas:', task.text);
+      if (newText && newText.trim()) {
+        task.text = newText.trim();
+        saveTasks();
+        renderTasks();
+      }
+    });
+    
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = '🗑️ Hapus';
+    deleteBtn.addEventListener('click', () => {
+      tasks.splice(index, 1);
+      saveTasks();
+      renderTasks();
+    });
+    
+    li.appendChild(checkbox);
+    li.appendChild(span);
+    li.appendChild(editBtn);
+    li.appendChild(deleteBtn);
+    taskList.appendChild(li);
+  });
+}
+
+document.getElementById('addTaskBtn').addEventListener('click', () => {
+  const input = document.getElementById('taskInput');
+  const text = input.value.trim();
+  if (text) {
+    tasks.push({ text, completed: false });
+    saveTasks();
+    renderTasks();
+    input.value = '';
+  } else {
+    alert('Masukkan tugas terlebih dahulu!');
+  }
+});
+
+loadTasks();
+
+// ========== QUICK LINKS dengan Local Storage ==========
+let links = [];
+
+function loadLinks() {
+  const stored = localStorage.getItem('quickLinks');
+  if (stored) {
+    links = JSON.parse(stored);
+  }
+  renderLinks();
+}
+
+function saveLinks() {
+  localStorage.setItem('quickLinks', JSON.stringify(links));
+}
+
+function renderLinks() {
+  const container = document.getElementById('linksContainer');
+  container.innerHTML = '';
+  
+  links.forEach((link, index) => {
+    const a = document.createElement('a');
+    a.href = link.url;
+    a.textContent = link.name;
+    a.target = '_blank';
+    a.className = 'link-btn';
+    
+    const deleteLinkBtn = document.createElement('button');
+    deleteLinkBtn.textContent = '❌';
+    deleteLinkBtn.style.marginLeft = '5px';
+    deleteLinkBtn.style.padding = '5px 10px';
+    deleteLinkBtn.style.background = '#dc3545';
+    deleteLinkBtn.style.color = 'white';
+    deleteLinkBtn.style.border = 'none';
+    deleteLinkBtn.style.borderRadius = '5px';
+    deleteLinkBtn.style.cursor = 'pointer';
+    deleteLinkBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      links.splice(index, 1);
+      saveLinks();
+      renderLinks();
+    });
+    
+    const wrapper = document.createElement('div');
+    wrapper.appendChild(a);
+    wrapper.appendChild(deleteLinkBtn);
+    container.appendChild(wrapper);
+  });
+}
+
+document.getElementById('addLinkBtn').addEventListener('click', () => {
+  const name = document.getElementById('linkName').value.trim();
+  let url = document.getElementById('linkUrl').value.trim();
+  
+  if (!name || !url) {
+    alert('Isi nama dan URL terlebih dahulu!');
+    return;
+  }
+  
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    url = 'https://' + url;
+  }
+  
+  links.push({ name, url });
+  saveLinks();
+  renderLinks();
+  
+  document.getElementById('linkName').value = '';
+  document.getElementById('linkUrl').value = '';
+});
+
+loadLinks();
