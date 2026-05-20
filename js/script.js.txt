@@ -8,7 +8,9 @@ function updateGreetingAndTime() {
   else if (hours < 18) greeting = '☀️ Selamat Siang';
   else greeting = '🌙 Selamat Malam';
   
-  document.getElementById('greeting').innerHTML = `${greeting}, User!`;
+  // Ambil nama dari Local Storage
+  let userName = localStorage.getItem('userName') || 'User';
+  document.getElementById('greetingText').innerHTML = `${greeting}, ${userName}!`;
   
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const dateString = now.toLocaleDateString('id-ID', options);
@@ -16,8 +18,17 @@ function updateGreetingAndTime() {
   document.getElementById('datetime').innerHTML = `${dateString} | ${timeString}`;
 }
 
-setInterval(updateGreetingAndTime, 1000);
-updateGreetingAndTime();
+// Simpan nama saat diubah
+document.getElementById('userName').addEventListener('change', (e) => {
+  localStorage.setItem('userName', e.target.value);
+  updateGreetingAndTime();
+});
+
+// Load nama yang tersimpan
+const savedName = localStorage.getItem('userName');
+if (savedName) {
+  document.getElementById('userName').value = savedName;
+}
 
 // ========== FOCUS TIMER ==========
 let timeLeft = 25 * 60; // 25 menit dalam detik
