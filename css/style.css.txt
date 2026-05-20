@@ -212,3 +212,30 @@ h2 {
   transform: translateY(-2px);
   background: #5a67d8;
 }
+
+/* Dark Mode */
+body.dark-mode {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+body.dark-mode .container {
+  background: #2d2d3f;
+  color: #eee;
+}
+body.dark-mode h1, body.dark-mode h2 {
+  color: #fff;
+}
+body.dark-mode .timer-section, 
+body.dark-mode .greeting-section {
+  background: #1e1e2e;
+}
+body.dark-mode .timer-display {
+  background: #2d2d3f;
+  color: #fff;
+}
+body.dark-mode #taskList li {
+  background: #3d3d4f;
+  color: #fff;
+}
+body.dark-mode .link-btn {
+  background: #0f3460;
+}
